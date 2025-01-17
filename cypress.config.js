@@ -5,17 +5,16 @@ module.exports = defineConfig({
   reporterOptions: {
     reportDir: 'mochawesome-report',
     overwrite: false,
-    reportFileName:"index.html",
-    html: true,
-    json: false,
-   
+    reportFilename: "index.html", // Nome do arquivo de saída
+    html: true, // Gera o relatório em HTML
+    json: false, // Não gera o arquivo JSON
   },
   e2e: {
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
+    // Configurações de plugins (se necessário)
     setupNodeEvents(on, config) {
       return require('./cypress/plugins/index.js')(on, config)
     },
-    baseUrl: 'http://localhost:3000/',
+    baseUrl: 'http://localhost:3000/', // URL base para os testes
   },
 })
+
