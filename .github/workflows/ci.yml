@@ -11,30 +11,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      # Ajuste aqui para usar uma versão mais recente do Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'  # Use '16' ou outra versão mais recente
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Start server
-        run: npm start
+          node-version: '16'
+      - run: npm install
+      - run: npm start &
         env:
           CI: true
-
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
           install-command: npm install
           browser: chrome
           start: npm start
-          command: npx cypress run --config-file cypress.config.js
-        continue-on-error: true
-
       - name: Publish Report
         uses: peaceiris/actions-gh-pages@v3
         with:
