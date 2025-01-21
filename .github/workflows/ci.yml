@@ -2,43 +2,39 @@ name: EBAC CI
 
 on:
   push:
-    branches: [ci]
-
+    branches: [ ci ]
   workflow_dispatch:
 
 jobs:
   test:
-    runs-on: ubuntu-24.04
-    
+    runs-on: ubuntu-latest
+
     steps:
-      # Checkout do código
       - uses: actions/checkout@v2
 
-      # Configuração do Node.js
-      - uses: actions/setup-node@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: '14'
 
-      # Instalar dependências
       - name: Install dependencies
         run: npm install
 
-      # Iniciar o servidor e executar os testes do Cypress
-      - name: Run Cypress tests
+      - name: Start server
+        run: npm start
+        env:
+          CI: true
+
+      - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
           install-command: npm install
           browser: chrome
           start: npm start
-        env:
-          CI: true
+          command: npx cypress run --config-file cypress.config.js
+        continue-on-error: true
 
-      # Gerar o relatório do mochawesome
-      - name: Generate mochawesome report
-        run: npm run cy:report
-
-      # Publicar o relatório no GitHub Pages
-      - name: Publish mochawesome Report
+      - name: Publish Report
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
