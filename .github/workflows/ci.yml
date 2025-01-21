@@ -12,10 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # Ajuste aqui para usar uma versão mais recente do Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'  # Use '16' ou outra versão mais recente
 
       - name: Install dependencies
         run: npm install
