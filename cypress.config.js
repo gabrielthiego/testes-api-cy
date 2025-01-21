@@ -5,9 +5,9 @@ module.exports = defineConfig({
   reporterOptions: {
     reportDir: 'mochawesome-report',
     overwrite: false,
-    reportFilename: "index.html", 
-    html: true, 
-    json: false, 
+    reportFilename: "index.html",
+    html: true,
+    json: false,
   },
   e2e: {
     setupNodeEvents(on, config) {
