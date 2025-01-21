@@ -25,6 +25,7 @@ jobs:
           install-command: npm install
           browser: chrome
           start: npm start
+          command: npx cypress run --config-file cypress.config.js
       - name: Publish Report
         uses: peaceiris/actions-gh-pages@v3
         with:
