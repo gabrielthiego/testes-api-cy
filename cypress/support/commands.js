@@ -24,7 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 Cypress.Commands.add('token', (email, senha) => {
-    cy.request({
+    return cy.request({
         method: 'POST',
         url: 'login',
         body: {
@@ -35,19 +35,23 @@ Cypress.Commands.add('token', (email, senha) => {
         expect(response.status).to.equal(200)
         return response.body.authorization
     })
- })
+})
 
- Cypress.Commands.add('cadastrarProduto' , (token, produto, preco, descricao, quantidade) =>{
+Cypress.Commands.add('cadastrarProduto', (token, produto, preco, descricao, quantidade) => {
     cy.request({
-        method: 'POST', 
+        method: 'POST',
         url: 'produtos',
-        headers: {authorization: token}, 
+        headers: { authorization: token },
         body: {
             "nome": produto,
             "preco": preco,
             "descricao": descricao,
             "quantidade": quantidade
-          }, 
-          failOnStatusCode: false
+        },
+        failOnStatusCode: false
+    }).then((response) => {
+        if (response.status !== 201) {
+            throw new Error(`Erro ao cadastrar produto: ${response.body.message}`);
+        }
     })
- })
+})
