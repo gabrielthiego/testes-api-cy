@@ -44,10 +44,14 @@ describe('Testes da Funcionalidade Produtos', () => {
     });
 
     it('Deve validar mensagem de erro ao cadastrar produto repetido', () => {
-        cy.cadastrarProduto(token, 'Produto EBAC Novo 1', 250, "Descrição do produto novo", 180)
-            .then((response) => {
-                expect(response.status).to.equal(201)
-                expect(response.body.message).to.equal('Já existe produto com esse nome')
+        let produto = 'Produto EBAC Novo 1'
+        cy.cadastrarProduto(token, produto, 250, "Descrição do produto novo", 180)
+            .then(() => {
+                cy.cadastrarProduto(token, produto, 250, "Descrição do produto novo", 180)
+                    .then((response) => {
+                        expect(response.status).to.equal(400)
+                        expect(response.body.message).to.equal('Já existe produto com esse nome')
+                    })
             })
     });
 
@@ -103,7 +107,7 @@ describe('Testes da Funcionalidade Produtos', () => {
                 method: 'DELETE',
                 url: `produtos/${id}`,
                 headers: {authorization: token}
-            }).then(response =>{
+            }).then(response => {
                 expect(response.body.message).to.equal('Registro excluído com sucesso')
                 expect(response.status).to.equal(200)
             })
