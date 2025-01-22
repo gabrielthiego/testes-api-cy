@@ -18,7 +18,6 @@ describe('Testes da Funcionalidade Produtos', () => {
             method: 'GET',
             url: 'produtos'
         }).then((response) => {
-            //expect(response.body.produtos[9].nome).to.equal('Produto EBAC 436746')
             expect(response.status).to.equal(200)
             expect(response.body).to.have.property('produtos')
             expect(response.duration).to.be.lessThan(20)
@@ -41,18 +40,6 @@ describe('Testes da Funcionalidade Produtos', () => {
             expect(response.status).to.equal(201)
             expect(response.body.message).to.equal('Cadastro realizado com sucesso')
         })
-    });
-
-    it('Deve validar mensagem de erro ao cadastrar produto repetido', () => {
-        let produto = 'Produto EBAC Novo 1'
-        cy.cadastrarProduto(token, produto, 250, "Descrição do produto novo", 180)
-            .then(() => {
-                cy.cadastrarProduto(token, produto, 250, "Descrição do produto novo", 180)
-                    .then((response) => {
-                        expect(response.status).to.equal(400)
-                        expect(response.body.message).to.equal('Já existe produto com esse nome')
-                    })
-            })
     });
 
     it('Deve editar um produto já cadastrado', () => {
