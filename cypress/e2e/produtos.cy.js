@@ -18,7 +18,6 @@ describe('Testes da Funcionalidade Produtos', () => {
             method: 'GET',
             url: 'produtos'
         }).then((response) => {
-            //expect(response.body.produtos[9].nome).to.equal('Produto EBAC 436746')
             expect(response.status).to.equal(200)
             expect(response.body).to.have.property('produtos')
             expect(response.duration).to.be.lessThan(20)
@@ -44,11 +43,17 @@ describe('Testes da Funcionalidade Produtos', () => {
     });
 
     it('Deve validar mensagem de erro ao cadastrar produto repetido', () => {
-        cy.cadastrarProduto(token, 'Produto EBAC Novo 1', 250, "Descrição do produto novo", 180)
-            .then((response) => {
-                expect(response.status).to.equal(400)
-                expect(response.body.message).to.equal('Já existe produto com esse nome')
-            })
+        const nomeProduto = 'Produto EBAC Novo 1'
+        // Cadastra pela primeira vez
+        cy.cadastrarProduto(token, nomeProduto, 250, "Descrição do produto novo", 180)
+          .then(() => {
+              // Tenta cadastrar de novo e espera erro 400
+              cy.cadastrarProduto(token, nomeProduto, 250, "Descrição do produto novo", 180)
+                .then((response) => {
+                    expect(response.status).to.equal(400)
+                    expect(response.body.message).to.equal('Já existe produto com esse nome')
+                })
+          })
     });
 
     it('Deve editar um produto já cadastrado', () => {
@@ -58,13 +63,12 @@ describe('Testes da Funcionalidade Produtos', () => {
                 method: 'PUT', 
                 url: `produtos/${id}`,
                 headers: {authorization: token}, 
-                body: 
-                {
+                body: {
                     "nome": "Produto Editado 45642083",
                     "preco": 100,
                     "descricao": "Produto editado",
                     "quantidade": 100
-                  }
+                }
             }).then(response => {
                 expect(response.body.message).to.equal('Registro alterado com sucesso')
             })
@@ -76,18 +80,16 @@ describe('Testes da Funcionalidade Produtos', () => {
         cy.cadastrarProduto(token, produto, 250, "Descrição do produto novo", 180)
         .then(response => {
             let id = response.body._id
-
             cy.request({
                 method: 'PUT', 
                 url: `produtos/${id}`,
                 headers: {authorization: token}, 
-                body: 
-                {
+                body: {
                     "nome": produto,
                     "preco": 200,
                     "descricao": "Produto editado",
                     "quantidade": 300
-                  }
+                }
             }).then(response => {
                 expect(response.body.message).to.equal('Registro alterado com sucesso')
             })
